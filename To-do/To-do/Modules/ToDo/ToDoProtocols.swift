@@ -8,17 +8,17 @@
 import Foundation
 
 protocol ToDoViewControllerProtocol: AnyObject {
-    
+    func displayTodos(_ todos: [ToDoEntity])
 }
 
 protocol ToDoPresenterProtocol: AnyObject {
-    
+    func presentTodos()
 }
 
 protocol ToDoInteractorProtocol: AnyObject {
-    
+    func getTodos() -> [ToDoEntity]
 }
 
 protocol ToDoRouterProtocol: AnyObject {
-    
+    static func createModule() -> ToDoViewController
 }

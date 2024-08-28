@@ -8,5 +8,10 @@
 import UIKit
 
 class ToDoPresenter: ToDoPresenterProtocol {
+    weak var view: ToDoViewControllerProtocol!
+    var interactor: ToDoInteractorProtocol!
     
+    func presentTodos() {
+        view.displayTodos(interactor.getTodos())
+    }
 }
