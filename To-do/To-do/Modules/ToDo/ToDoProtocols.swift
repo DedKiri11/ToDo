@@ -12,11 +12,13 @@ protocol ToDoViewControllerProtocol: AnyObject {
 }
 
 protocol ToDoPresenterProtocol: AnyObject {
-    func presentTodos()
+    func viewWillAppear()
+    func presentTodos(todos: [ToDoEntity])
 }
 
 protocol ToDoInteractorProtocol: AnyObject {
-    func getTodos() -> [ToDoEntity]
+    func loadTodos()
+    func retriveTodos()
 }
 
 protocol ToDoRouterProtocol: AnyObject {

@@ -11,7 +11,11 @@ class ToDoPresenter: ToDoPresenterProtocol {
     weak var view: ToDoViewControllerProtocol!
     var interactor: ToDoInteractorProtocol!
     
-    func presentTodos() {
-        view.displayTodos(interactor.getTodos())
+    func viewWillAppear() {
+        interactor?.loadTodos()
+    }
+    
+    func presentTodos(todos: [ToDoEntity]) {
+        view.displayTodos(todos)
     }
 }

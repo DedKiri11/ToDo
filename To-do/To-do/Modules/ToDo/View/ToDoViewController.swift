@@ -30,7 +30,12 @@ class ToDoViewController: UIViewController, ToDoViewControllerProtocol, UITableV
         super.viewDidLoad()
         
         setUpUI()
-        presenter.presentTodos()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        presenter.viewWillAppear()
     }
     
     private func setUpUI() {
@@ -51,7 +56,7 @@ class ToDoViewController: UIViewController, ToDoViewControllerProtocol, UITableV
         
         table.dataSource = self
         table.delegate = self
-        table.register(UITableViewCell.self, forCellReuseIdentifier: "TodoCell")
+        table.register(ToDoTableCell.self, forCellReuseIdentifier: ToDoTableCell.identifier)
     }
     
     func displayTodos(_ todos: [ToDoEntity]) {
@@ -64,9 +69,13 @@ class ToDoViewController: UIViewController, ToDoViewControllerProtocol, UITableV
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TodoCell", for: indexPath)
-        let todo = todos[indexPath.row]
-        cell.textLabel?.text = todo.todo
-        return cell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ToDoTableCell.identifier, for: indexPath) as? ToDoTableCell else {
+               return UITableViewCell() // Возвращаем пустую ячейку, если что-то пошло не так
+           }
+           
+           let todo = todos[indexPath.row]
+           cell.configure(with: todo)
+           
+           return cell
     }
 }

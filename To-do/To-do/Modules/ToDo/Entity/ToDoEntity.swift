@@ -12,4 +12,10 @@ struct ToDoEntity: Codable {
     var todo: String
     var completed: Bool
     var date: Date = Date()
+    
+    enum CodingKeys: String, CodingKey {
+            case id = "id"
+            case todo = "todo"
+            case completed = "completed"
+        }
 }
