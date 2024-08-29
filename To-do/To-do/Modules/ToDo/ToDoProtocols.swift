@@ -12,12 +12,14 @@ protocol ToDoViewControllerProtocol: AnyObject {
 }
 
 protocol ToDoPresenterProtocol: AnyObject {
+    func deleteToDo(todo: ToDoEntity)
     func viewWillAppear()
     func presentTodos(todos: [ToDoEntity])
 }
 
 protocol ToDoInteractorProtocol: AnyObject {
     func loadTodos()
+    func deleteFromDb(todo: ToDoEntity)
     func retriveTodos()
 }
 

@@ -9,16 +9,29 @@ import UIKit
 
 class ToDoInteractor: ToDoInteractorProtocol {
     weak var presenter: ToDoPresenterProtocol?
-    var todos: [ToDoEntity] = []
+    let db = CoreDataService.shared
+    var todos: [ToDoEntity] = CoreDataService.shared.fetchTodos()
     
     func loadTodos() {
-        ToDoService.getData { [weak self] array in
-            self?.todos = array
-            print("Loaded todos: \(array)")
+        if !todos.isEmpty {
             DispatchQueue.main.async {
-                self?.retriveTodos()
+                self.retriveTodos()
+            }
+        } else {
+            ToDoAPIService.shared.getData { [weak self] array in
+                self?.todos = array
+                
+                DispatchQueue.main.async {
+                    self?.retriveTodos()
+                }
+                
+                self?.db.downloadTodos(todos: self?.todos ?? [])
             }
         }
+    }
+    
+    func deleteFromDb(todo: ToDoEntity) {
+        self.db.deleteToDo(todo: todo)
     }
     
     func retriveTodos() {

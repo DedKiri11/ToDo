@@ -7,8 +7,9 @@
 
 import Foundation
 
-class ToDoService {
-    static func getData(completion: @escaping (([ToDoEntity])->())) {
+class ToDoAPIService {
+    static var shared = ToDoAPIService()
+    func getData(completion: @escaping (([ToDoEntity])->())) {
         APIHelper.sendRequest { data in
             guard let response = try? JSONDecoder().decode(HTTPResponse.self, from: data) else { return }
             completion(response.todos)

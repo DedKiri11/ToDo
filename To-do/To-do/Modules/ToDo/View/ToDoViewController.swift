@@ -45,7 +45,7 @@ class ToDoViewController: UIViewController, ToDoViewControllerProtocol, UITableV
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.titleLeading),
             titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
-
+        
         view.addSubview(table)
         NSLayoutConstraint.activate([
             table.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
@@ -68,14 +68,23 @@ class ToDoViewController: UIViewController, ToDoViewControllerProtocol, UITableV
         return todos.count
     }
     
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            print(todos[indexPath.row])
+            presenter.deleteToDo(todo: todos[indexPath.row])
+            todos.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ToDoTableCell.identifier, for: indexPath) as? ToDoTableCell else {
-               return UITableViewCell() // Возвращаем пустую ячейку, если что-то пошло не так
-           }
-           
-           let todo = todos[indexPath.row]
-           cell.configure(with: todo)
-           
-           return cell
+            return UITableViewCell()
+        }
+        
+        let todo = todos[indexPath.row]
+        cell.configure(with: todo)
+        
+        return cell
     }
 }

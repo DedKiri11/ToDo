@@ -15,6 +15,10 @@ class ToDoPresenter: ToDoPresenterProtocol {
         interactor?.loadTodos()
     }
     
+    func deleteToDo(todo: ToDoEntity) {
+        interactor.deleteFromDb(todo: todo)
+    }
+    
     func presentTodos(todos: [ToDoEntity]) {
         view.displayTodos(todos)
     }
