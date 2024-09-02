@@ -10,23 +10,43 @@ import UIKit
 class ToDoInteractor: ToDoInteractorProtocol {
     weak var presenter: ToDoPresenterProtocol?
     let db = CoreDataService.shared
-    var todos: [ToDoEntity] = CoreDataService.shared.fetchTodos()
+    var todos: [ToDoEntity] = []
     
     func loadTodos() {
-        if !todos.isEmpty {
-            DispatchQueue.main.async {
-                self.retriveTodos()
+        db.fetchTodos(completion: { [weak self] todos in
+            self?.todos = todos
+            
+            if !todos.isEmpty {
+                self?.retriveTodos()
+                return
             }
-        } else {
+            
             ToDoAPIService.shared.getData { [weak self] array in
                 self?.todos = array
-                
-                DispatchQueue.main.async {
-                    self?.retriveTodos()
-                }
-                
                 self?.db.downloadTodos(todos: self?.todos ?? [])
+                
+                self?.retriveTodos()
             }
+        })
+    }
+    
+    func createToDo(todo: ToDoEntity) {
+        self.db.createToDo(todo: ToDoEntity(id: findNextId(), todo: todo.todo, completed: todo.completed)) { [weak self] in
+            self?.db.fetchTodos(completion: { [weak self] todos in
+                self?.todos = todos
+                
+                self?.retriveTodos()
+            })
+        }
+    }
+    
+    func updateToDo(todo: ToDoEntity) {
+        self.db.updateToDo(todo: todo) { [weak self] in
+            self?.db.fetchTodos(completion: { [weak self] todos in
+                self?.todos = todos
+                
+                self?.retriveTodos()
+            })
         }
     }
     
@@ -35,6 +55,12 @@ class ToDoInteractor: ToDoInteractorProtocol {
     }
     
     func retriveTodos() {
-        presenter?.presentTodos(todos: todos)
+        DispatchQueue.main.async {
+            self.presenter?.presentTodos(todos: self.todos)
+        }
+    }
+    
+    func findNextId() -> Int {
+        return (self.todos.map { $0.id }.max() ?? 0) + 1
     }
 }

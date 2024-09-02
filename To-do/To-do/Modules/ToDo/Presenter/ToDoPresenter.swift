@@ -15,11 +15,20 @@ class ToDoPresenter: ToDoPresenterProtocol {
         interactor?.loadTodos()
     }
     
+    func addToDo(todo: ToDoEntity) {
+        interactor.createToDo(todo: todo)
+    }
+    
     func deleteToDo(todo: ToDoEntity) {
         interactor.deleteFromDb(todo: todo)
     }
     
+    func updateToDo(todo: ToDoEntity) {
+        interactor.updateToDo(todo: todo)
+    }
+    
     func presentTodos(todos: [ToDoEntity]) {
-        view.displayTodos(todos)
+        let sortedTodos = todos.sorted { $0.date > $1.date }
+        view.displayTodos(sortedTodos)
     }
 }
