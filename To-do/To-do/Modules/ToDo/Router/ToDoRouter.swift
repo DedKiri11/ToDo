@@ -16,6 +16,7 @@ class ToDoRouter: ToDoRouterProtocol {
         view.presenter = presenter
         presenter.interactor = interactor
         presenter.view = view
+        interactor.presenter = presenter
         
         return view
     }
